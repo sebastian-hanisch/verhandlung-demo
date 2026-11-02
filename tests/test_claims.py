@@ -94,7 +94,8 @@ def scale_table(grid) -> list[str]:
     rows = []
     for a in C.E6_AS:
         for r in sorted((r for r in grid["scale"] if abs(r["a"] - a) < 1e-9), key=lambda r: r["k"]):
-            rows.append(f"| {_c(a, 2)} | {_c(r['k'], 1)} | {_p(r['nash'], 1)} | {_p(r['ks'], 1)} | {_p(r['egalitarian'], 1)} | {_p(r['utilitarian'], 1)} |")
+            util = _p(r['utilitarian'], 1) + (" (beliebig, Summe konstant)" if abs(a - 1.0) < 1e-9 and abs(r["k"] - 1.0) < 1e-9 else "")
+            rows.append(f"| {_c(a, 2)} | {_c(r['k'], 1)} | {_p(r['nash'], 1)} | {_p(r['ks'], 1)} | {_p(r['egalitarian'], 1)} | {util} |")
     return rows
 
 

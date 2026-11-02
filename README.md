@@ -11,7 +11,7 @@ noch Nutzenform); `myerson-satterthwaite-demo` hat **private** Werte; hier kenne
 
 ## Warum dieses Problem
 
-Wer eine Frachtrate aushandelt, teilt einen Überschuss, und wer länger warten kann, bekommt mehr. Befund (Geduld beider Seiten 0,9, 200 Runden, stetige Angebote, Verlader bietet zuerst, linearer Nutzen): der Verlader bekommt
+Wer eine Frachtrate aushandelt, teilt einen Überschuss, und wer geduldiger wird, bekommt mehr; ein kleiner Vorsprung an Geduld gleicht den Vorteil des Zuerstbietens nicht aus (Geduld 0,90 und 0,905: der Verlader bekommt 51,2 %). Befund (Geduld beider Seiten 0,9, 200 Runden, stetige Angebote, Verlader bietet zuerst, linearer Nutzen): der Verlader bekommt
 **52,6 %** des Überschusses, der Spediteur 47,4 %; die Formel (1 − δ₂)/(1 − δ₁δ₂) gibt 10/19. Der Wert der Geduld wächst: bei Geduld des Spediteurs 0,9 steigt der Anteil des Verladers, wenn seine Geduld von 0,90 auf 0,91 wächst,
 von 52,6 % auf **55,2 %** (+2,62 Prozentpunkte), und die Steigung des Anteils nach der Geduld liegt bei Geduld 0,5 bei 0,30, bei 0,9 bei 2,49 und bei 0,99 bei 7,58.
 Der Shapley-Wert (Halbe-halbe) bleibt dabei bei 50,0 %.
@@ -65,8 +65,8 @@ Alle Zahlen stehen in `tests/test_claims.py` (Tabellen Zeile für Zeile in der R
 | **H5** Feste Kosten: wer weniger Kosten hat und zuerst bietet, bekommt bei langem Horizont genau 1; hat der erste die größeren, bekommt er die Kosten des anderen | Ja, enger gefasst als im Plan („fast alles“ wird „genau 1“) | 8 von 8 Fällen mit ungleichen Kosten (T = 1 000 und 1 001); bei gleichen Kosten kein eindeutiges Ergebnis: ungerades T gibt dem ersten Anbieter alles, gerades T nur c |
 | **H6** Die Außenoption zählt erst über dem Rubinstein-Anteil des Antwortenden, dann gilt o; Variante C verschiebt die Schwelle | Ja | Geduld (0,9; 0,9): Schwelle 0,4737 (A), 0,5263 (C); Variante B in 0 von 2400 Zellen anders als A |
 | **H7** Nash und Kalai–Smorodinsky sind maßstabsinvariant, egalitär und utilitaristisch nicht | Ja | Maßstab k = 0,1; 1; 10, Drohpunkt 0,1·k, vier Krümmungen: Nash und Kalai–Smorodinsky gleich auf 9 Stellen; egalitär bei Krümmung 0,5: 8,6 % (k = 0,1), 56,2 % (k = 1), 96,2 % (k = 10) |
-| **H8** Rubinstein bei Δ → 0 und Krümmung a nähert sich der Nash-Lösung; Risikoscheu verschiebt zugunsten des anderen | Ja | Abstand bei Δ = 0,001 unter 5·10⁻⁴ für a = 1; 0,5; 0,25; Krümmung 0,5 und Drohpunkt 0,1: Nash 62,6 % statt 45,0 % bei linearem Nutzen |
-| **H9** Lernende landen im Nash-, nicht im teilspielperfekten Gleichgewicht | Ja, als Bandbreite | 32 Läufe, kein Lauf im teilspielperfekten Anteil, alle mit Nash-Lücke höchstens 0,024; die Anteile hängen an Lernrate und Zufalls-Seed (Tabelle) |
+| **H8** Rubinstein bei Δ → 0 und Krümmung a nähert sich der Nash-Lösung; ein stärker gekrümmter Nutzen des Spediteurs verschiebt zugunsten des Verladers | Ja | Abstand bei Δ = 0,001 unter 5·10⁻⁴ für a = 1; 0,5; 0,25; Krümmung 0,5 und Drohpunkt 0,1: Nash 62,6 % statt 45,0 % bei linearem Nutzen. „Risikoscheu“ passt nur für die Nash-Lösung mit Lotterien; im Rubinstein-Spiel gibt es kein Risiko, dort wirkt die Krümmung wie größere Ungeduld (wirksamer Diskont δ₂^(1/a)) |
+| **H9** Lernende landen im Nash-, nicht im teilspielperfekten Gleichgewicht | Ja, als Bandbreite | 32 Läufe, kein Lauf beim teilspielperfekten Anteil der Regel A (Ultimatum 100 %, zwei Runden 10 %), alle mit Nash-Lücke höchstens 0,024; ein Regret-Matching-Lauf im Ultimatum (Zufalls-Seed 3) landet bei 90 %, dem teilspielperfekten Ergebnis der Regel R (Ablehnung bei Gleichstand), die übrigen Läufe bei 70 % bis 80 % beziehungsweise 18 % bis 60 % und sind nicht teilspielperfekt; die Anteile hängen an Lernrate und Zufalls-Seed (Tabelle) |
 | **H10** Das Verhältnis der Raten Hin/Rück hängt linear am inversen Flussverhältnis | nicht geprüft | der Reiter ist nicht gebaut |
 | **H11** Die Nash-Lösung mit Drohpunkt und das Ausstiegsprinzip teilen gleich auf | Nein | bei o = 0,2 und Geduld 0,9999 beider Seiten gibt Nash dem Halter 60,0 %, das Ausstiegsprinzip 50,0 % (Tabelle) |
 
@@ -180,7 +180,7 @@ Zwei Lesarten von „Außenoption“ (Anteil des Halters bei Geduld 0,9999 beide
 | Krümmung a | Maßstab k | Nash | Kalai–Smorodinsky | egalitär | utilitaristisch |
 |---|---|---|---|---|---|
 | 1,00 | 0,1 | 45,0 % | 45,0 % | 8,2 % | 90,0 % |
-| 1,00 | 1,0 | 45,0 % | 45,0 % | 45,0 % | 0,0 % |
+| 1,00 | 1,0 | 45,0 % | 45,0 % | 45,0 % | 0,0 % (beliebig, Summe konstant) |
 | 1,00 | 10,0 | 45,0 % | 45,0 % | 81,8 % | 0,0 % |
 | 0,50 | 0,1 | 62,6 % | 59,2 % | 8,6 % | 99,0 % |
 | 0,50 | 1,0 | 62,6 % | 59,2 % | 56,2 % | 75,0 % |
@@ -217,8 +217,8 @@ Abstand Rubinstein minus Nash bei gleicher Rate und Rundenlänge Δ (Tage):
 | 0,25 | 0,010 | 0,00398 |
 | 0,25 | 0,001 | 0,00040 |
 
-**Lernende Verhandler** (Experiment 7; Anteil des Anbieters (Spieler 1) nach 20 000 Runden, letzter Iterierter, 4 Zufalls-Seeds je Zeile, Bereich kleinster bis größter; größte Nash-Lücke; teilspielperfekt: Ultimatum 100 %, zwei Runden 10 %). **Nash heißt nicht teilspielperfekt:**
-32 Läufe, kein Lauf im teilspielperfekten Anteil; im Ultimatumspiel gibt es 13 reine Nash-Gleichgewichte (Regret Matching: 70 % bis 90 %), im Spiel mit zwei Runden hängt der Anteil an Lernrate und Zufalls-Seed (Hedge mit Lernrate 2: 18,2 % bis 18,3 %; Hedge mit Lernrate 8: 20 % bis 60 %; Regret Matching: 20 % bis 60 %). Das gilt für diese zwei Lernregeln in diesen zwei
+**Lernende Verhandler** (Experiment 7; Anteil des Anbieters (Spieler 1) nach 20 000 Runden, letzter Iterierter, 4 Zufalls-Seeds je Zeile, Bereich kleinster bis größter; größte Nash-Lücke; teilspielperfekt nach Regel A: Ultimatum 100 %, zwei Runden 10 %). **Nash heißt nicht teilspielperfekt:**
+32 Läufe, kein Lauf beim teilspielperfekten Anteil der Regel A; ein Regret-Matching-Lauf im Ultimatum liegt bei 90 %, dem Ergebnis der Regel R (Ablehnung bei Gleichstand); im Ultimatumspiel gibt es 13 reine Nash-Gleichgewichte (Regret Matching: 70 % bis 90 %), im Spiel mit zwei Runden hängt der Anteil an Lernrate und Zufalls-Seed (Hedge mit Lernrate 2: 18,2 % bis 18,3 %; Hedge mit Lernrate 8: 20 % bis 60 %; Regret Matching: 20 % bis 60 %). Das gilt für diese zwei Lernregeln in diesen zwei
 Spielen und ist kein Befund darüber, wie echte Verhandler handeln.
 
 | Spiel | Lernregel | Lernrate η₀ | Anteil von Spieler 1 | größte Nash-Lücke | teilspielperfekt |

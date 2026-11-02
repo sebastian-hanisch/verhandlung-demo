@@ -129,7 +129,7 @@ with st.sidebar:
     st.slider("Wert der Außenoption o", *bounds("o_slider"), step=0.01, key="o_slider", format="%.2f", help="Was der Antwortende der ersten Runde bekäme, wenn er aussteigt (Anteil am Überschuss). Wirkt im Reiter Außenoption.")
     st.radio("Variante der Außenoption", list(C.VARIANTS), format_func=C.VARIANTS.get, key="variant_radio", help="A: der Erlös o kommt sofort nach der Ablehnung; C: eine Runde später (zählt δ·o). Variante B ist nicht angeboten: sie ist in 2 400 von 2 400 gemessenen Zellen gleich A. Wirkt im Reiter Außenoption.")
     st.header("⚖️ Nutzen und Lösungskonzepte")
-    st.slider("Krümmung des Nutzens des Spediteurs a", *bounds("curv_slider"), step=0.05, key="curv_slider", format="%.2f", help="u₂ = k·(1 − x)^a: a < 1 risikoscheu, a = 1 linear, a > 1 nicht konvexe Menge. Wirkt im Reiter Lösungskonzepte.")
+    st.slider("Krümmung des Nutzens des Spediteurs a", *bounds("curv_slider"), step=0.05, key="curv_slider", format="%.2f", help="u₂ = k·(1 − x)^a: a < 1 konkav (in der Nash-Lösung risikoscheu, im Rubinstein-Spiel wie größere Ungeduld), a = 1 linear, a > 1 nicht konvexe Menge. Wirkt im Reiter Lösungskonzepte.")
     st.select_slider("Maßstab k des Nutzens des Spediteurs", options=C.SCALE_OPTIONS, key="scale_select", help="Der Nutzen des Spediteurs wird mit k multipliziert (der Drohpunkt mit). Wirkt im Reiter Lösungskonzepte.")
     st.slider("Drohpunkt des Spediteurs (Anteil von k)", *bounds("threat_slider"), step=0.05, key="threat_slider", format="%.2f", help="Was der Spediteur ohne Einigung bekäme, als Anteil von k; der Verlader hat 0. Wirkt im Reiter Lösungskonzepte.")
     st.header("🧪 Lernende Verhandler")
@@ -273,7 +273,7 @@ with tabs[5]:
     if grid is not None:
         e6_a = st.selectbox("Krümmung a für die Tabelle", list(C.E6_AS), index=1, key="e6_a", format_func=lambda v: de(v, 2))
         rows6 = sorted([r for r in grid["scale"] if abs(r["a"] - e6_a) < 1e-9], key=lambda r: r["k"])
-        st.caption("Der Nutzen des Spediteurs wird mit k multipliziert, der Drohpunkt (Anteil 0,1 von k) wächst mit; die Verhandlungsmenge hat dieselbe Form. Anteile des Verladers.")
+        st.caption("Der Nutzen des Spediteurs wird mit k multipliziert, der Drohpunkt (Anteil 0,1 von k) wächst mit; die Verhandlungsmenge hat dieselbe Form. Anteile des Verladers. Bei Krümmung 1 und k = 1 ist die Summe der Nutzen konstant: Jeder Anteil ist utilitaristisch optimal, die Demo wählt per Regel den kleinsten (0,0 %).")
         st.plotly_chart(build_scale(rows6), width="stretch", key="e6_chart")
         st.dataframe([{"Maßstab k": de(r["k"], 1), "Nash": pct(r["nash"], 2), "Kalai–Smorodinsky": pct(r["ks"], 2), "egalitär": pct(r["egalitarian"], 2), "utilitaristisch": pct(r["utilitarian"], 2), "Halbe-halbe": "50,00 %"} for r in rows6],
                      hide_index=True, width="stretch")
@@ -298,7 +298,7 @@ with tabs[6]:
 # --- Reiter 8: Lernende Verhandler ---------------------------------------------------------------------------------------------------------
 
 with tabs[7]:
-    st.markdown("**Nash heißt nicht teilspielperfekt.** Zwei Lernregeln spielen wiederholt gegeneinander und landen in Nash-Gleichgewichten, in der Messreihe unten aber in keinem Lauf im teilspielperfekten Ergebnis.")
+    st.markdown("**Nash heißt nicht teilspielperfekt.** Zwei Lernregeln spielen wiederholt gegeneinander und landen in Nash-Gleichgewichten, in der Messreihe unten aber in keinem Lauf beim teilspielperfekten Ergebnis der Regel A (ein Regret-Matching-Lauf im Ultimatum landet bei 90 %, dem Ergebnis der Regel R).")
     st.caption("Wirkt: Spiel, Lernregel, Lernrate, Lernrunden und Zufalls-Seed. Rechenzeit wächst linear mit den Runden; ein Lauf läuft hinter dem Knopf.")
     learn_key = (settings.game, settings.learn_rule, settings.eta, settings.rounds, settings.seed)
     if st.button("▶️ Lernlauf starten", key="learn_start"):
@@ -317,7 +317,7 @@ with tabs[7]:
     st.subheader("🔬 Experiment 7: Vier Zufalls-Seeds je Lernregel")
     if grid is not None:
         cells = grid["learn"]
-        st.caption(f"{len(cells)} Zellen mal {len(C.GRID_LEARN_SEEDS)} Zufalls-Seeds, je {C.GRID_LEARN_ROUNDS} Runden, letzter Iterierter (kein Zeitmittel). Anteil des Anbieters (Spieler 1); teilspielperfekt wäre 100 % im Ultimatum und 10 % in zwei Runden.")
+        st.caption(f"{len(cells)} Zellen mal {len(C.GRID_LEARN_SEEDS)} Zufalls-Seeds, je {C.GRID_LEARN_ROUNDS} Runden, letzter Iterierter (kein Zeitmittel). Anteil des Anbieters (Spieler 1); teilspielperfekt wäre bei Regel A 100 % im Ultimatum und 10 % in zwei Runden.")
         st.plotly_chart(build_learning_bands(cells), width="stretch", key="e7_chart")
         st.dataframe([{"Spiel": C.GAMES[c["game"]], "Lernregel": C.LEARN_RULES[c["rule"]], "Lernrate η₀": de(c["eta"], 1) if c["rule"] == "hedge" else "–",
                        "Anteil von Spieler 1 (kleinster bis größter)": f"{pct(min(c['shares']), 1)} bis {pct(max(c['shares']), 1)}", "größte Nash-Lücke": de(max(c["gaps"]), 3), "teilspielperfekt": pct(c["spe"], 0)} for c in cells],

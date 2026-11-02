@@ -114,7 +114,7 @@ PRESET_HELP = {
     "Feste Kosten": "Feste Kosten je Runde (Verlader 0,05, Spediteur 0,10, Verlader bietet zuerst, 200 Runden): der Verlader bekommt 100 %; bei Diskont mit d = 1 − c wären es 69,0 %. Reiter „Feste Kosten“.",
     "Außenoption unter der Schwelle": "Außenoption 0,4 des Spediteurs liegt unter der Schwelle 0,474 (Geduld 0,9, Variante A, 200 Runden): sie ändert nichts, der Spediteur bekommt 47,4 %. Reiter „Außenoption“.",
     "Außenoption über der Schwelle": "Außenoption 0,6 über der Schwelle 0,474 (Geduld 0,9, Variante A, 200 Runden): der Spediteur bekommt genau 60,0 %. Reiter „Außenoption“.",
-    "Risikoscheu": "Der Spediteur ist risikoscheu (Krümmung 0,5, Maßstab 1, Drohpunkt 0,1): die Nash-Lösung gibt dem Verlader 62,6 % statt 45,0 % bei linearem Nutzen. Reiter „Lösungskonzepte“.",
+    "Risikoscheu": "Der Nutzen des Spediteurs ist gekrümmt (Krümmung 0,5, Maßstab 1, Drohpunkt 0,1; in der Nash-Lösung risikoscheu, im Rubinstein-Spiel wie größere Ungeduld): die Nash-Lösung gibt dem Verlader 62,6 % statt 45,0 % bei linearem Nutzen. Reiter „Lösungskonzepte“.",
     "Rasterfalle": "Angebote nur in Zehnteln, Geduld 0,9, 200 Runden (gerade), Annahme bei Gleichstand: der Verlader bekommt 10,0 % statt 52,6 % im stetigen Spiel. Reiter „Raster und Gleichstand“.",
 }
 

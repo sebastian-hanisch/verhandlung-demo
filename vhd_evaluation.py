@@ -588,6 +588,6 @@ def verdict_e7(cells: list) -> tuple:
     runs = sum(len(c["shares"]) for c in cells)
     hit = sum(1 for c in cells for x in c["shares"] if abs(x - c["spe"]) < 1e-9)
     near = sum(1 for c in cells for g in c["gaps"] if g <= NASH_GAP_LIMIT)
-    return "info", (f"{runs} Läufe ({len(cells)} Zellen mal {len(cells[0]['seeds'])} Zufalls-Seeds, {cells[0]['rounds']} Runden, letzter Iterierter): {hit} enden im teilspielperfekten Anteil, {near} haben eine Nash-Lücke "
+    return "info", (f"{runs} Läufe ({len(cells)} Zellen mal {len(cells[0]['seeds'])} Zufalls-Seeds, {cells[0]['rounds']} Runden, letzter Iterierter): {hit} enden im teilspielperfekten Anteil der Regel A, {near} haben eine Nash-Lücke "
                     f"von höchstens {de(NASH_GAP_LIMIT, 2)}. Der Anteil hängt an der Lernrate und, bei Regret Matching, am Zufalls-Seed (Bänder in der Tabelle). Das ist ein Befund über diese beiden Lernregeln "
                     f"in diesen zwei Spielen, keine Aussage über echte Verhandler.")
