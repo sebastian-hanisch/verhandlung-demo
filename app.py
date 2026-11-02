@@ -82,6 +82,19 @@ Weiter unten: acht Reiter mit Experimenten (**🔬**), **🚧 Wo die Annahmen en
 """
 )
 
+# erklaerseite:einfach:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/geduld-verhandlung-erklaert.json, nicht von Hand ändern)
+with st.expander("💬 In einfachen Worten"):
+    st.markdown(
+        """
+Ein **Verlader** und ein **Spediteur** teilen den **Überschuss** einer Tour (der Wert für den Verlader minus die Kosten des Spediteurs, hier auf 1 gesetzt). Sie machen sich **abwechselnd Angebote**, und jede Runde Warten kostet beide etwas. Gerechnet wird von der letzten Runde rückwärts: Wer bietet, bietet dem anderen genau so viel, wie dieser als nächster Anbieter nach Abzug der Wartekosten bekäme. Deshalb einigen sich beide im Modell sofort, und **wer das Warten besser verkraftet, bekommt mehr**.
+
+Die Experimente zeigen, was Geduld, Zahl der Runden, Rundenlänge, feste Kosten, eine **Außenoption** (eine Alternative zum Abschluss) und ein grobes Angebotsraster ändern, vergleichen Lösungskonzepte wie die Nash-Lösung und lassen zwei Lernregeln gegeneinander spielen. **Eigennutz, Geduld und Nutzenfunktionen sind Modellannahmen, keine Aussagen über echte Verhandler.** Beide Seiten kennen alles; private Information kommt nicht vor.
+
+[Ausführlich und verständlich erklärt, mit Fachteil](https://sebastianhanisch.net/geduld-verhandlung-erklaert.html)
+        """
+    )
+# erklaerseite:einfach:end
+
 with st.expander("So funktioniert Verhandeln mit abwechselnden Angeboten", expanded=True):
     st.markdown(
         r"""
@@ -349,6 +362,24 @@ with st.expander("⚠️ Annahmen, Grenzen und bekannte Probleme"):
 st.markdown("---")
 
 with st.expander("📐 Mathematische Formulierung"):
+    # erklaerseite:lesehilfe:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/geduld-verhandlung-erklaert.json, nicht von Hand ändern)
+    st.markdown(
+        r"""
+**Lesehilfe.** Der Überschuss der Tour ist 1; Spieler 1 (Verlader) und Spieler 2 (Spediteur) teilen ihn. Der erste Anbieter bietet in den ungeraden Runden, der zweite in den geraden. Eine Einigung in Runde $t$ zählt mit $\delta_i^{\,t-1}$ (Geduld $\delta_i$) bzw. mit $-c_i (t-1)$ (feste Kosten).
+
+| Symbol | Bedeutung |
+|---|---|
+| $\delta_1,\ \delta_2$ | Diskontfaktoren (Geduld) des ersten und des zweiten Anbieters |
+| $T$, $v_t$ | Horizont; Wert des Anbieters der Runde $t$ im Rückwärtsrechnen |
+| $c_i$ | feste Kosten je Runde |
+| $o$, $x_2^*$ | Außenoption; Rubinstein-Anteil des Antwortenden ohne Option |
+| $G$ | Raster der Angebote (Schritte $1/G$) |
+| $a,\ k,\ d_2$ | Krümmung, Maßstab und Drohpunkt des Spediteurs |
+
+[Schritt für Schritt erklärt, mit Herleitung und Literatur](https://sebastianhanisch.net/geduld-verhandlung-erklaert.html#fachleute)
+        """
+    )
+    # erklaerseite:lesehilfe:end
     st.markdown(
         r"""
 **Lesehilfe.** Der Überschuss der Tour ist 1; Spieler 1 (Verlader) und Spieler 2 (Spediteur) teilen ihn. Der erste Anbieter bietet in den ungeraden Runden, der zweite in den geraden. Eine Einigung in Runde $t$ zählt mit
@@ -414,5 +445,5 @@ st.markdown("---")
 st.caption(
     "Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – "
     "Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). "
-    "Mehr zu den Demos: [Interaktive Demos](https://sebastianhanisch.net/demos.html)."
+    "Mehr zur Reihe: [Regeln setzen, verhandeln, kontrollieren](https://sebastianhanisch.net/konzepte-verhandeln.html)."
 )

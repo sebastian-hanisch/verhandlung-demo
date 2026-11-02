@@ -1,7 +1,6 @@
 # Verhandlung: wer Zeit hat, bekommt mehr – Streamlit-Demo
 
-<!-- TODO nach dem Deploy: direkt hierher den Live-Link setzen (Leerzeile davor und danach):
-**[→ Demo live ausprobieren](https://sebastianhanisch-verhandlung-demo.streamlit.app/)** -->
+**[→ Demo live ausprobieren](https://sebastianhanisch-verhandlung-demo.streamlit.app/)**
 
 Konzepte-Demo für die Website „Sebastian Hanisch – Operations Research und Machine Learning“, Teil der Linie zu Verhandlung, Auktion und Vertrag. Ein **Verlader** und ein **Spediteur** teilen den Überschuss einer Tour
 (Wert für den Verlader minus Kosten des Spediteurs, hier auf 1 normiert; die Frachtrate ist Kosten plus Anteil mal Überschuss) und machen sich **abwechselnd Angebote**; jede Runde Warten kostet beide etwas. Die Demo rechnet das
@@ -327,4 +326,4 @@ Gebaut mit Streamlit, Plotly, NumPy und fpdf2.
 
 ---
 
-Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zu den Demos: [Interaktive Demos](https://sebastianhanisch.net/demos.html).
+Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zur Reihe: [Regeln setzen, verhandeln, kontrollieren](https://sebastianhanisch.net/konzepte-verhandeln.html).
