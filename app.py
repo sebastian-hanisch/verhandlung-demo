@@ -72,7 +72,7 @@ with st.container(key="kopf"):
     st.title("🤝 Verhandlung: wer Zeit hat, bekommt mehr")
 st.markdown(
     """
-**Ein Verlader und ein Spediteur teilen den Überschuss einer Tour** (Wert für den Verlader minus Kosten des Spediteurs, hier auf 1 normiert; die Frachtrate ist dann Kosten plus Anteil mal Überschuss). Sie machen sich
+**Ein Verlader und ein Spediteur teilen den Überschuss einer Tour** (Wert für den Verlader minus Kosten des Spediteurs, hier auf 1 normiert; die Frachtrate ist dann Kosten plus Anteil des Spediteurs mal Überschuss). Sie machen sich
 **abwechselnd Angebote**, und jede Runde Warten kostet beide etwas. Die Fragen: **Was bestimmt die Aufteilung, wenn man sich über Runden hinweg einigt? Was ist Geduld wert? Und wie ändern Horizont, Rundenlänge, feste
 Kosten, eine Außenoption oder ein grobes Angebotsraster das Ergebnis?** Die Demo gehört zur Linie zu Verhandlung, Auktion und Vertrag; Shapley und Kern teilen einen Gewinn ohne Ablauf, die
 Myerson–Satterthwaite-Demo hat private Werte, hier kennen beide alles.

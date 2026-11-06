@@ -3,7 +3,7 @@
 **[→ Demo live ausprobieren](https://sebastianhanisch-verhandlung-demo.streamlit.app/)**
 
 Konzepte-Demo für die Website „Sebastian Hanisch – Operations Research und Machine Learning“, Teil der Linie zu Verhandlung, Auktion und Vertrag. Ein **Verlader** und ein **Spediteur** teilen den Überschuss einer Tour
-(Wert für den Verlader minus Kosten des Spediteurs, hier auf 1 normiert; die Frachtrate ist Kosten plus Anteil mal Überschuss) und machen sich **abwechselnd Angebote**; jede Runde Warten kostet beide etwas. Die Demo rechnet das
+(Wert für den Verlader minus Kosten des Spediteurs, hier auf 1 normiert; die Frachtrate ist Kosten plus Anteil des Spediteurs mal Überschuss) und machen sich **abwechselnd Angebote**; jede Runde Warten kostet beide etwas. Die Demo rechnet das
 Rubinstein-Gleichgewicht (Formel gegen unabhängiges Rückwärtsrechnen), zeigt, was Geduld, Horizont, Rundenlänge, feste Kosten, eine Außenoption und ein grobes Angebotsraster ändern, vergleicht Lösungskonzepte mit einer
 Maßstabsprobe und lässt zwei Lernregeln gegeneinander spielen. Nachbarn im Portfolio: `shapley-demo` und `kern-demo` teilen einen Gewinn **ohne Ablauf** (bei zwei Spielern ist der Shapley-Wert Halbe-halbe und kennt weder Geduld
 noch Nutzenform); `myerson-satterthwaite-demo` hat **private** Werte; hier kennen beide alles. **Eigennutz, Geduld und Nutzenfunktionen sind Modellannahmen, keine Aussagen über echte Verhandler.**
@@ -236,7 +236,7 @@ Spielen und ist kein Befund darüber, wie echte Verhandler handeln.
 **Annahmen**
 
 - **Vollständige Information:** beide Seiten kennen Wert, Kosten und Geduld der anderen; private Information ist nicht Teil dieser Demo (die Myerson–Satterthwaite-Demo rechnet private Werte, ohne Ablauf in der Zeit).
-- **Zwei Parteien, abwechselnde Angebote:** der Überschuss S = v − c der Tour ist auf 1 normiert, die Rate ist c + x·S. Wer antwortet, nimmt an oder lehnt ab; Wartekosten sind ein Diskontfaktor je Runde oder feste Kosten je Runde.
+- **Zwei Parteien, abwechselnde Angebote:** der Überschuss S = v − c der Tour ist auf 1 normiert, x ist der Anteil des Verladers, die Rate ist c + (1 − x)·S. Wer antwortet, nimmt an oder lehnt ab; Wartekosten sind ein Diskontfaktor je Runde oder feste Kosten je Runde.
 - **Eigennutz, Geduld und Nutzenfunktionen sind Modellannahmen**, keine Aussagen über echte Verhandler. Der Nutzen ist linear im Anteil, nur im Reiter „Lösungskonzepte“ hat der Spediteur die Krümmung a.
 - **Teilspielperfektes Gleichgewicht** mit Annahme bei Gleichstand; im Rasterspiel wird der Gleichstand in drei Ebenen ausgewiesen (Antwortender: Regel A oder R, Anbieter: angenommenes Angebot bevorzugt, Wahl unter gleichen Angeboten: das kleinste).
 - **Außenoption** hat nur der Antwortende der ersten Runde; angeboten sind die Varianten A (Erlös sofort nach der Ablehnung) und C (Erlös eine Runde später).

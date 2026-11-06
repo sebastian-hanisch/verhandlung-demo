@@ -122,7 +122,7 @@ PRESET_HELP = {
 ASSUMPTIONS_MARKDOWN = """**Annahmen**
 
 - **Vollständige Information:** beide Seiten kennen Wert, Kosten und Geduld der anderen; private Information ist nicht Teil dieser Demo (die Myerson–Satterthwaite-Demo rechnet private Werte, ohne Ablauf in der Zeit).
-- **Zwei Parteien, abwechselnde Angebote:** der Überschuss S = v − c der Tour ist auf 1 normiert, die Rate ist c + x·S. Wer antwortet, nimmt an oder lehnt ab; Wartekosten sind ein Diskontfaktor je Runde oder feste Kosten je Runde.
+- **Zwei Parteien, abwechselnde Angebote:** der Überschuss S = v − c der Tour ist auf 1 normiert, x ist der Anteil des Verladers, die Rate ist c + (1 − x)·S. Wer antwortet, nimmt an oder lehnt ab; Wartekosten sind ein Diskontfaktor je Runde oder feste Kosten je Runde.
 - **Eigennutz, Geduld und Nutzenfunktionen sind Modellannahmen**, keine Aussagen über echte Verhandler. Der Nutzen ist linear im Anteil, nur im Reiter „Lösungskonzepte“ hat der Spediteur die Krümmung a.
 - **Teilspielperfektes Gleichgewicht** mit Annahme bei Gleichstand; im Rasterspiel wird der Gleichstand in drei Ebenen ausgewiesen (Antwortender: Regel A oder R, Anbieter: angenommenes Angebot bevorzugt, Wahl unter gleichen Angeboten: das kleinste).
 - **Außenoption** hat nur der Antwortende der ersten Runde; angeboten sind die Varianten A (Erlös sofort nach der Ablehnung) und C (Erlös eine Runde später).
