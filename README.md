@@ -297,7 +297,7 @@ Nash-Lösung und Maßstabsinvarianz kommen auch als Gewichtung von Zielen beim M
 
 ## Bewusst nicht umgesetzt
 
-- **Hin- und Rückfahrt mit Flussungleichgewicht** (Dreiparteien-Modell, Raten für Hin- und Rückfahrt): der Reiter ist nicht gebaut; die Entscheidung fiel erst nach den Kern-Reitern, und die Modellannahmen (Wert je Sendung gleich, Rückfahrt leer ohne Rückfracht) tragen die Aussage nicht.
+- **Hin- und Rückfahrt mit Flussungleichgewicht** (Dreiparteien-Modell, Raten für Hin- und Rückfahrt): der Reiter ist nicht gebaut; die Entscheidung fiel erst nach den Kern-Reitern, und die Modellannahmen (Wert je Sendung gleich, Rückfahrt leer ohne Rückfracht) belegen die Aussage nicht.
 - **Private Information** (Verhandeln mit Geheimnissen, Verzögerung bei einseitiger privater Information): nicht gebaut; `myerson-satterthwaite-demo` rechnet private Werte ohne Ablauf in der Zeit.
 - **Mehrparteien-Verhandlung** (Koalitionsverhandlung) und **Daten echter Verhandler**: nicht gebaut, keine eigenen Daten an Menschen.
 - **Variante B der Außenoption** als Regler: sie ist in 0 von 2400 gemessenen Zellen gleich Variante A.
