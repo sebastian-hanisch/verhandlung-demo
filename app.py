@@ -147,7 +147,7 @@ with st.sidebar:
     st.slider("Drohpunkt des Spediteurs (Anteil von k)", *bounds("threat_slider"), step=0.05, key="threat_slider", format="%.2f", help="Was der Spediteur ohne Einigung bekäme, als Anteil von k; der Verlader hat 0. Wirkt im Reiter Lösungskonzepte.")
     st.header("🧪 Lernende Verhandler")
     st.selectbox("Spiel", list(C.GAMES), format_func=C.GAMES.get, key="game_select", help="Ultimatum: Angebot und Annahmeschwelle in Zehnteln. Zwei Runden: dazu Gegenangebot und Schwelle für Runde 2. Wirkt im Reiter Lernende Verhandler.")
-    st.selectbox("Lernregel", list(C.LEARN_RULES), format_func=C.LEARN_RULES.get, key="learn_rule_select", help="Hedge gewichtet nach der Summe der bisherigen Auszahlungen, Regret Matching nach den positiven Bedauern. Wirkt im Reiter Lernende Verhandler.")
+    st.selectbox("Lernregel", list(C.LEARN_RULES), format_func=C.LEARN_RULES.get, key="learn_rule_select", help="Hedge gewichtet nach der Summe der bisherigen Auszahlungen, Regret Matching nach den positiven Regrets. Wirkt im Reiter Lernende Verhandler.")
     st.select_slider("Lernrate η₀ (nur Hedge)", options=C.ETA_OPTIONS, key="eta_select", help="Hedge lernt mit η₀/√t; bei Regret Matching ohne Wirkung (dort wird die Rate nicht benutzt). Wirkt im Reiter Lernende Verhandler.")
     st.slider("Lernrunden", *bounds("rounds_slider"), step=1000, key="rounds_slider", help="Die Rechenzeit wächst linear mit den Runden. Wirkt im Reiter Lernende Verhandler.")
     st.number_input("Zufalls-Seed", *bounds("seed_input"), key="seed_input", step=1)
@@ -432,7 +432,7 @@ $$ \text{Kalai–Smorodinsky: } \frac{u_1}{\bar u_1} = \frac{u_2 - d_2}{\bar u_2
 
 $$ x_{\text{Nash}} = \frac{1}{1+a}, \qquad x_1 = \frac{1-\delta_2^{1/a}}{1-\delta_1\,\delta_2^{1/a}} $$
 
-**Lernregeln:** Hedge mit Lernrate $\eta_t = \eta_0/\sqrt{t}$ und Regret Matching mit den kumulierten Bedauern $R_t(i)$:
+**Lernregeln:** Hedge mit Lernrate $\eta_t = \eta_0/\sqrt{t}$ und Regret Matching mit den kumulierten Regrets $R_t(i)$:
 
 $$ p_t(i) \;\propto\; \exp\Big(\eta_t \sum_{s<t} u_s(i)\Big), \qquad p_t(i) \;\propto\; \max\big(R_t(i),\, 0\big) $$
 
