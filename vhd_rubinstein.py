@@ -1,4 +1,4 @@
-"""Rubinstein-Verhandlung mit abwechselnden Angeboten: Formel, Rückwärtsrechnen im Spiel mit T Runden, feste Kosten, kurze Runden.
+"""Rubinstein-Verhandlung mit abwechselnden Angeboten: Formel, Rückwärtsinduktion im Spiel mit T Runden, feste Kosten, kurze Runden.
 
 Alle Anteile sind Anteile am Überschuss der Tour (Überschuss = 1). Runde 1 bietet der erste Anbieter, Runde 2 der zweite usw.; wer antwortet, nimmt an oder lehnt ab.
 `d_first`, `d_second` sind die Diskontfaktoren (Geduld) des ersten und des zweiten Anbieters: eine Einigung in Runde t zählt mit d^(t−1). Die Funktionen rechnen mit
@@ -25,7 +25,7 @@ def first_mover_edge(d1, d2):
 
 
 def backward_T(d_first, d_second, T: int) -> list:
-    """Rückwärtsrechnen im Spiel mit T Runden (stetige Angebote, Annahme bei Gleichstand): Anteil des Anbieters der Runde t für t = 1 … T (Liste, Index 0 = Runde 1).
+    """Rückwärtsinduktion im Spiel mit T Runden (stetige Angebote, Annahme bei Gleichstand): Anteil des Anbieters der Runde t für t = 1 … T (Liste, Index 0 = Runde 1).
 
     v_T = 1 (in der letzten Runde nimmt der Antwortende alles an); v_t = 1 − d_Antwortende · v_(t+1). In ungeraden Runden antwortet der zweite Anbieter."""
     if T < 1:
@@ -104,12 +104,12 @@ def costs_prediction(c_first, c_second):
 
 
 def discount_from_costs(c):
-    """Diskontfaktor mit derselben Verlustrate in Runde 1 wie die festen Kosten c: d = 1 − c (nur für den Vergleich)."""
+    """Diskontfaktor mit derselben Diskontrate in Runde 1 wie die festen Kosten c: d = 1 − c (nur für den Vergleich)."""
     return 1 - c
 
 
 def delta_from_rate(rate: float, dt: float) -> float:
-    """Diskontfaktor einer Runde der Länge dt bei der Verlustrate rate je Zeiteinheit: exp(−rate · dt)."""
+    """Diskontfaktor einer Runde der Länge dt bei der Diskontrate rate je Zeiteinheit: exp(−rate · dt)."""
     return math.exp(-rate * dt)
 
 
@@ -124,5 +124,5 @@ def limit_share_short_rounds(r_first: float, r_second: float) -> float:
 
 
 def short_round_rate(r_first: float, r_second: float) -> float:
-    """Steigung des Abstands zum Grenzwert in der Rundenlänge (Handentwicklung): x₁ − Grenzwert ≈ dt · r₁ r₂ / (2 (r₁ + r₂))."""
+    """Steigung des Abstands zum Grenzwert in der Rundenlänge (Taylor-Entwicklung): x₁ − Grenzwert ≈ dt · r₁ r₂ / (2 (r₁ + r₂))."""
     return r_first * r_second / (2 * (r_first + r_second))

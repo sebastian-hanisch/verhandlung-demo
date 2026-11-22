@@ -1,6 +1,6 @@
 """Konstanten: Regler-Grenzen, Wahlmöglichkeiten, Raster der Messreihen, Farben und Presets.
 
-Rechenbudget am Regler-Maximum (DEMO-PLAYBOOK §1c): Rückwärtsrechnen und Kosten sind O(T), also bei T = 2 000 Millisekunden; das Rasterspiel rechnet in
+Rechenbudget am Regler-Maximum (DEMO-PLAYBOOK §1c): Rückwärtsinduktion und Kosten sind O(T), also bei T = 2 000 Millisekunden; das Rasterspiel rechnet in
 Brüchen (fractions) ebenfalls O(T), bei T = 2 000 und G = 10 000 gemessen unter einer halben Sekunde; die stationären Fixpunkte des Rasters kosten O(G). Die
 Lernläufe (vhd_learning) sind die einzige Rechnung mit Wartezeit: O(Runden · Aktionen) je Lauf, deshalb hinter einem Knopf mit Spinner (Messung im
 Abschnitt „Lernende Verhandler“ der App und in der README). Die Messreihen der Experimente stehen vorgerechnet in data/negotiation_grid.json."""
@@ -29,7 +29,7 @@ COST_MIN, COST_MAX = 0.0, 1.2
 DEFAULT_C1, DEFAULT_C2 = 0.10, 0.10    # gleiche Kosten: kein eindeutiges Ergebnis (Reiter „Feste Kosten“)
 
 # --- kurze Runden ------------------------------------------------------------------------------------------------------------------------------
-RATE_MIN, RATE_MAX = 0.1, 5.0       # Verlustrate je Tag: δ = exp(−r·Δ)
+RATE_MIN, RATE_MAX = 0.1, 5.0       # Diskontrate je Tag: δ = exp(−r·Δ)
 DEFAULT_R1, DEFAULT_R2 = 1.0, 2.0
 DT_OPTIONS = (1.0, 0.5, 0.25, 0.1, 1 / 24, 0.01, 1 / 1440, 0.0001)   # Rundenlänge in Tagen: 1 Tag … 1 Stunde … 1 Minute … 8,6 s
 DT_LABELS = {1.0: "1 Tag", 0.5: "12 Stunden", 0.25: "6 Stunden", 0.1: "2,4 Stunden", 1 / 24: "1 Stunde", 0.01: "14,4 Minuten", 1 / 1440: "1 Minute", 0.0001: "8,64 Sekunden"}
@@ -110,7 +110,7 @@ PRESET_HELP = {
     "Gleiche Geduld (Voreinstellung)": "Beide Seiten mit Geduld 0,9, 200 Runden, stetige Angebote, der Verlader bietet zuerst: er bekommt 52,6 % des Überschusses (Formel 10/19), nicht die Hälfte.",
     "Geduld ist Macht": "Der Verlader wird von 0,90 auf 0,91 geduldiger: sein Anteil steigt von 52,6 % auf 55,2 % (Spediteur 0,90, 200 Runden, stetige Angebote, Verlader bietet zuerst).",
     "Ultimatum (eine Runde)": "Nur eine Runde, Verlader bietet: stetig bekommt er 100 %; auf dem Raster mit Zehnteln und Ablehnung bei Gleichstand (Regel R) 90 %. Reiter „Raster und Gleichstand“.",
-    "Kurze Runden": "Verlustraten 1 (Verlader) und 2 (Spediteur) je Tag, Runden von einer Stunde statt einem Tag: der Verlader bekommt als erster Anbieter 68,0 % statt 91,0 %; Grenzwert für Runden gegen null 66,7 %. Reiter „Kurze Runden“.",
+    "Kurze Runden": "Diskontraten 1 (Verlader) und 2 (Spediteur) je Tag, Runden von einer Stunde statt einem Tag: der Verlader bekommt als erster Anbieter 68,0 % statt 91,0 %; Grenzwert für Runden gegen null 66,7 %. Reiter „Kurze Runden“.",
     "Feste Kosten": "Feste Kosten je Runde (Verlader 0,05, Spediteur 0,10, Verlader bietet zuerst, 200 Runden): der Verlader bekommt 100 %; bei Diskont mit d = 1 − c wären es 69,0 %. Reiter „Feste Kosten“.",
     "Außenoption unter der Schwelle": "Außenoption 0,4 des Spediteurs liegt unter der Schwelle 0,474 (Geduld 0,9, Variante A, 200 Runden): sie ändert nichts, der Spediteur bekommt 47,4 %. Reiter „Außenoption“.",
     "Außenoption über der Schwelle": "Außenoption 0,6 über der Schwelle 0,474 (Geduld 0,9, Variante A, 200 Runden): der Spediteur bekommt genau 60,0 %. Reiter „Außenoption“.",

@@ -53,7 +53,7 @@ def pure_nash_equilibria(u1: np.ndarray, u2: np.ndarray, tol: float = 1e-12) -> 
 
 
 def spe_share(game: str, G: int = 10, delta: float = 0.9):
-    """Anteil von Spieler 1 im teilspielperfekten Ergebnis der Regel A (Zustimmung bei Gleichstand), aus dem Rückwärtsrechnen des Rasterspiels: Ultimatum T = 1, zwei Runden T = 2. Bei Regel R (Ablehnung bei Gleichstand) ist im Ultimatum auch 90 % teilspielperfekt."""
+    """Anteil von Spieler 1 im teilspielperfekten Ergebnis der Regel A (Zustimmung bei Gleichstand), aus der Rückwärtsinduktion des Rasterspiels: Ultimatum T = 1, zwei Runden T = 2. Bei Regel R (Ablehnung bei Gleichstand) ist im Ultimatum auch 90 % teilspielperfekt."""
     T = 1 if game == "ultimatum" else 2
     return grid_share_first(str(delta), str(delta), T, G, True)
 

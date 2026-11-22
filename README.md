@@ -4,7 +4,7 @@
 
 Konzepte-Demo für die Website „Sebastian Hanisch – Operations Research und Machine Learning“, Teil der Linie zu Verhandlung, Auktion und Vertrag. Ein **Verlader** und ein **Spediteur** teilen den Überschuss einer Tour
 (Wert für den Verlader minus Kosten des Spediteurs, hier auf 1 normiert; die Frachtrate ist Kosten plus Anteil des Spediteurs mal Überschuss) und machen sich **abwechselnd Angebote**; jede Runde Warten kostet beide etwas. Die Demo rechnet das
-Rubinstein-Gleichgewicht (Formel gegen unabhängiges Rückwärtsrechnen), zeigt, was Geduld, Horizont, Rundenlänge, feste Kosten, eine Außenoption und ein grobes Angebotsraster ändern, vergleicht Lösungskonzepte mit einer
+Rubinstein-Gleichgewicht (Formel gegen unabhängige Rückwärtsinduktion), zeigt, was Geduld, Horizont, Rundenlänge, feste Kosten, eine Außenoption und ein grobes Angebotsraster ändern, vergleicht Lösungskonzepte mit einer
 Maßstabsprobe und lässt zwei Lernregeln gegeneinander spielen. Nachbarn im Portfolio: `shapley-demo` und `kern-demo` teilen einen Gewinn **ohne Ablauf** (bei zwei Spielern ist der Shapley-Wert Halbe-halbe und kennt weder Geduld
 noch Nutzenform); `myerson-satterthwaite-demo` hat **private** Werte; hier kennen beide alles. **Eigennutz, Geduld und Nutzenfunktionen sind Modellannahmen, keine Aussagen über echte Verhandler.**
 
@@ -30,25 +30,25 @@ Der Einzelplan (`verhandeln-planung/STUECK-B-verhandlung.md`, nicht in diesem Re
 
 Der Überschuss der Tour ist 1; Spieler 1 (Verlader) und Spieler 2 (Spediteur) teilen ihn. In Runde 1 bietet der **erste Anbieter**, in Runde 2 der zweite usw.; wer antwortet, nimmt an oder lehnt ab. Nach **T Runden** ist Schluss
 (T = 1: Ultimatum). Wartekosten: ein **Diskontfaktor δ** je Runde (eine Einigung in Runde t zählt mit δ^(t−1)) oder **feste Kosten** c je Runde (Auszahlung x − c·(t − 1)). Das Gleichgewicht ist das teilspielperfekte, gerechnet durch
-**Rückwärtsrechnen** (`vhd_rubinstein.py`): in der letzten Runde bekommt der Anbieter alles, davor muss er dem Antwortenden so viel bieten, wie dieser als nächster Anbieter nach Abzug der Wartekosten bekäme. Im Gleichgewicht
+**Rückwärtsinduktion** (`vhd_rubinstein.py`): in der letzten Runde bekommt der Anbieter alles, davor muss er dem Antwortenden so viel bieten, wie dieser als nächster Anbieter nach Abzug der Wartekosten bekäme. Im Gleichgewicht
 einigen sich beide sofort in Runde 1; die späteren Runden bestimmen den Preis dafür. Bei unendlichem Horizont gilt die Formel (1 − δ₂)/(1 − δ₁δ₂) für den ersten Anbieter; der Abstand bei Horizont T ist in geschlossener Form
-durch die geometrische Summe gegeben (📐-Expander der App, getestet gegen exaktes Rückwärtsrechnen in Brüchen).
+durch die geometrische Summe gegeben (📐-Expander der App, getestet gegen exakte Rückwärtsinduktion in Brüchen).
 
 - **Raster** (`vhd_raster.py`): Angebote nur als Vielfache von 1/G, gerechnet **ganzzahlig in Brüchen**, nie in Gleitkomma. Gleichstand in drei Ebenen: der Antwortende nimmt bei gleichem Wert an (Regel A) oder lehnt ab (Regel R); der Anbieter zieht bei
   gleicher Auszahlung das angenommene Angebot vor; unter gleich guten angenommenen Angeboten gilt das kleinste. Dazu die stationären Gleichgewichte mit sofortiger Einigung.
 - **Außenoption** (`vhd_outside.py`): der Antwortende der ersten Runde kann nach einer Ablehnung aussteigen. Variante A: Erlös o sofort; Variante C: eine Runde später (δ·o). Sie zählt erst über der Schwelle x₂* = δ₂(1 − δ₁)/(1 − δ₁δ₂) (Variante A) bzw. x₂*/δ₂ (Variante C).
-- **Kurze Runden:** δᵢ = exp(−rᵢ·Δ) bei Rundenlänge Δ; Grenzwert für Δ → 0 ist r₂/(r₁ + r₂) für den ersten Anbieter Verlader (Verlustraten r₁, r₂).
+- **Kurze Runden:** δᵢ = exp(−rᵢ·Δ) bei Rundenlänge Δ; Grenzwert für Δ → 0 ist r₂/(r₁ + r₂) für den ersten Anbieter Verlader (Diskontraten r₁, r₂).
 - **Lösungskonzepte** (`vhd_solutions.py`): Verhandlungsmenge u₁ = x, u₂ = k·(1 − x)^a, Drohpunkt (0, d₂). Nash, Kalai–Smorodinsky, egalitär, utilitaristisch und Halbe-halbe, ohne scipy zur Laufzeit (Bisektion auf Funktionen, die auf dem Suchintervall monoton sind); Rubinstein bei gekrümmtem Nutzen über den wirksamen Diskont δ₂^(1/a).
 - **Lernende Verhandler** (`vhd_learning.py`): Hedge (Lernrate η₀/√t) und Regret Matching im Ultimatumspiel (Zehntelraster) und im Spiel mit zwei Runden (Diskont 0,9). Pro Runde ziehen beide Spieler eine Aktion (SplitMix64, fester Zufalls-Seed); ausgewiesen wird der letzte Iterierte.
 
 ## Methodik
 
-- **Kleine Einheiten mit Mini-Instanzen von Hand** (DEMO-PLAYBOOK §1b, `tests/conftest.py`): Formel, Rückwärtsrechnen, Kosten, kleinstes annehmbares Rasterangebot, Raster-Rückwärtsrechnen, Fixpunkte, Außenoption, jedes Lösungskonzept, Lernregeln und Nash-Lücke.
-- **Orakel** (`tests/test_oracle_*.py`, anderer Rechenweg): Formel gegen das lineare Gleichungssystem A₁ = 1 − δ₂A₂, A₂ = 1 − δ₁A₁ (`numpy.linalg.solve`), gegen die geschlossene Summe und gegen exaktes Rückwärtsrechnen in Brüchen (T = 500, 501); Raster gegen die Aufzählung **aller** Rasterangebote; Fixpunkte gegen
+- **Kleine Einheiten mit Mini-Instanzen von Hand** (DEMO-PLAYBOOK §1b, `tests/conftest.py`): Formel, Rückwärtsinduktion, Kosten, kleinstes annehmbares Rasterangebot, Raster-Rückwärtsinduktion, Fixpunkte, Außenoption, jedes Lösungskonzept, Lernregeln und Nash-Lücke.
+- **Orakel** (`tests/test_oracle_*.py`, anderer Rechenweg): Formel gegen das lineare Gleichungssystem A₁ = 1 − δ₂A₂, A₂ = 1 − δ₁A₁ (`numpy.linalg.solve`), gegen die geschlossene Summe und gegen exakte Rückwärtsinduktion in Brüchen (T = 500, 501); Raster gegen die Aufzählung **aller** Rasterangebote; Fixpunkte gegen
   die Prüfung aller (A₁, A₂)-Paare; feste Kosten gegen die Aufzählung aller Rasterangebote und die Fallunterscheidung von Hand; Außenoption gegen einen Spielbaum mit allen Entscheidungen und die Handformeln; Nash und Kalai–Smorodinsky gegen `scipy.optimize` und ein Gitter mit 400 001 Punkten;
-  Rubinstein bei gekrümmtem Nutzen gegen das Rückwärtsrechnen direkt in Nutzen; Lernregeln gegen eine Schleifenfassung ohne NumPy mit demselben Zufallsstrom; reine Nash-Gleichgewichte gegen die Prüfung jedes Aktionspaars.
+  Rubinstein bei gekrümmtem Nutzen gegen die Rückwärtsinduktion direkt in Nutzen; Lernregeln gegen eine Schleifenfassung ohne NumPy mit demselben Zufallsstrom; reine Nash-Gleichgewichte gegen die Prüfung jedes Aktionspaars.
 - **Eigenschaftstests:** Spieler umbenennen, positiv-affine Umrechnung der Nutzen (Nash und Kalai–Smorodinsky unverändert, egalitär nicht), Monotonie in der Geduld bei jedem Horizont, Anteile summieren zu 1, gleicher Seed gleiche Ausgabe.
-- **Experimente** (Reiter der App, jeweils live und als vorgerechnete Messreihe): (0) Wert der Geduld, (1) Formel gegen Rückwärtsrechnen, (2) die Rasterfrage, (3) kurze Runden, (4) feste Kosten gegen Diskont, (5) Außenoption, (6) Maßstabsprobe, (7) Lernende.
+- **Experimente** (Reiter der App, jeweils live und als vorgerechnete Messreihe): (0) Wert der Geduld, (1) Formel gegen Rückwärtsinduktion, (2) die Rasterfrage, (3) kurze Runden, (4) feste Kosten gegen Diskont, (5) Außenoption, (6) Maßstabsprobe, (7) Lernende.
 - **Vorgerechnete Messreihen** (`tools/make_grid.py`, `data/negotiation_grid.json`): alles bis auf die Lernläufe ist deterministisch (Brüche oder Formeln); die Lernläufe benutzen 4 feste Zufalls-Seeds und 20 000 Runden je Lauf. `tests/test_grid.py` rechnet eine Probe nach.
 
 ## Befunde (gemessen, keine Behauptungen)
@@ -57,7 +57,7 @@ Alle Zahlen stehen in `tests/test_claims.py` (Tabellen Zeile für Zeile in der R
 
 | Hypothese | Ergebnis | Befund (Bedingung) |
 |---|---|---|
-| **H1** Die Formel (1 − δ₂)/(1 − δ₁δ₂) ist der Grenzwert des Rückwärtsrechnens; der Fehler fällt wie (δ₁δ₂)^(T/2) | Ja | exakt in Brüchen für T = 1 bis 40 gleich der geschlossenen Summe; Fehler bei T = 500 und 501 unter 10⁻²⁰ (Paare (0,9; 0,9), (0,95; 0,8), (0,5; 0,9), (0,8; 0,95)); kleinstes T für Fehler < 10⁻⁶: 126 gemessen, 131 vorhergesagt bei (0,9; 0,9) |
+| **H1** Die Formel (1 − δ₂)/(1 − δ₁δ₂) ist der Grenzwert der Rückwärtsinduktion; der Fehler fällt wie (δ₁δ₂)^(T/2) | Ja | exakt in Brüchen für T = 1 bis 40 gleich der geschlossenen Summe; Fehler bei T = 500 und 501 unter 10⁻²⁰ (Paare (0,9; 0,9), (0,95; 0,8), (0,5; 0,9), (0,8; 0,95)); kleinstes T für Fehler < 10⁻⁶: 126 gemessen, 131 vorhergesagt bei (0,9; 0,9) |
 | **H2** Ungerade T liegen nicht unter, gerade nicht über dem Grenzwert; T = 1 ist das Ultimatum | Ja | Geduld (0,9; 0,9), stetig: T = 10 gibt 34,28 %, T = 11 69,15 %, Grenzwert 52,63 %; die geschlossene Form des Abstands (📐-Expander) gilt exakt in Brüchen für 60 Zufallspaare mit Geduld 0 bis 0,98 und T = 1 bis 14 |
 | **H3** Raster: Fehler ≤ 1/((1 − δ₁δ₂)·G); mehrere stationäre Gleichgewichte; hängt an der Gleichstandsregel | Ja, mit Ausnahmen | Schranke in 196 von 200 Zellen; die 4 Ausnahmen sind δ₁ = δ₂ = 0,99, G = 10 000 bei T = 400 und 401 (T noch nicht konvergiert); bis zu 9 stationäre Gleichgewichte; Regel A gegen R: größter Unterschied über T = 1 bis 60 in allen 12 Zellen (4 Paare, G = 10, 100, 1 000) genau 1/G |
 | **H4** Δ → 0 mit gleicher Rate: Anteil → r₂/(r₁ + r₂) (Nash mit Gewichten 1/r); der Vorteil des Zuerstbietens sinkt linear in Δ | Ja | (1; 2) je Tag, Verlader bietet zuerst: Runden von 1 Tag 91,00 %, 1 Stunde 68,05 %, 1 Minute 66,69 %, Grenzwert 66,67 %; Vorteil bei Raten (1; 1) von 0,0500 (Δ = 0,1) auf 0,000500 (Δ = 0,001) |
@@ -67,7 +67,7 @@ Alle Zahlen stehen in `tests/test_claims.py` (Tabellen Zeile für Zeile in der R
 | **H8** Rubinstein bei Δ → 0 und Krümmung a nähert sich der Nash-Lösung; ein stärker gekrümmter Nutzen des Spediteurs verschiebt zugunsten des Verladers | Ja | Abstand bei Δ = 0,001 unter 5·10⁻⁴ für a = 1; 0,5; 0,25; Krümmung 0,5 und Drohpunkt 0,1: Nash 62,6 % statt 45,0 % bei linearem Nutzen. „Risikoscheu“ passt nur für die Nash-Lösung mit Lotterien; im Rubinstein-Spiel gibt es kein Risiko, dort wirkt die Krümmung wie größere Ungeduld (wirksamer Diskont δ₂^(1/a)) |
 | **H9** Lernende landen im Nash-, nicht im teilspielperfekten Gleichgewicht | Ja, als Bandbreite | 32 Läufe, kein Lauf beim teilspielperfekten Anteil der Regel A (Ultimatum 100 %, zwei Runden 10 %), alle mit Nash-Lücke höchstens 0,024; ein Regret-Matching-Lauf im Ultimatum (Zufalls-Seed 3) landet bei 90 %, dem teilspielperfekten Ergebnis der Regel R (Ablehnung bei Gleichstand), die übrigen Läufe bei 70 % bis 80 % beziehungsweise 18 % bis 60 % und sind nicht teilspielperfekt; die Anteile hängen an Lernrate und Zufalls-Seed (Tabelle) |
 | **H10** Das Verhältnis der Raten Hin/Rück hängt linear am inversen Flussverhältnis | nicht geprüft | der Reiter ist nicht gebaut |
-| **H11** Die Nash-Lösung mit Drohpunkt und das Ausstiegsprinzip teilen gleich auf | Nein | bei o = 0,2 und Geduld 0,9999 beider Seiten gibt Nash dem Halter 60,0 %, das Ausstiegsprinzip 50,0 % (Tabelle) |
+| **H11** Die Nash-Lösung mit Drohpunkt und das Outside-Option-Prinzip teilen gleich auf | Nein | bei o = 0,2 und Geduld 0,9999 beider Seiten gibt Nash dem Halter 60,0 %, das Outside-Option-Prinzip 50,0 % (Tabelle) |
 
 **Wert der Geduld** (Experiment 0; Geduld des Spediteurs 0,9, Verlader bietet zuerst bzw. Spediteur bietet zuerst, unendlicher Horizont; Steigung des Anteils nach δ₁):
 
@@ -79,7 +79,7 @@ Alle Zahlen stehen in `tests/test_claims.py` (Tabellen Zeile für Zeile in der R
 | 0,90 | 52,6 % | 47,4 % | 50,0 % | 2,49 |
 | 0,99 | 91,7 % | 90,8 % | 50,0 % | 7,58 |
 
-**Formel gegen Rückwärtsrechnen** (Experiment 1; Gleitkomma bis T = 2 000, Fehler gegen die Formel; „kleinstes T“ heißt: der Fehler bleibt für alle größeren T bis 2 000 unter 10⁻⁶; Vorhersage aus (δ₁δ₂)^(T/2) < 10⁻⁶):
+**Formel gegen Rückwärtsinduktion** (Experiment 1; Gleitkomma bis T = 2 000, Fehler gegen die Formel; „kleinstes T“ heißt: der Fehler bleibt für alle größeren T bis 2 000 unter 10⁻⁶; Vorhersage aus (δ₁δ₂)^(T/2) < 10⁻⁶):
 
 | (δ₁; δ₂) | Formel | T = 10 | T = 11 | kleinstes T | vorhergesagt |
 |---|---|---|---|---|---|
@@ -108,9 +108,9 @@ Stationäre Gleichgewichte des Rasterspiels mit sofortiger Einigung, Geduld (0,9
 Das Ultimatum auf dem Raster mit Zehnteln und Geduld 0,9: Regel A gibt dem Anbieter 100,0 %, Regel R 90,0 % (G = 100: 99,0 %). **Rasterfalle** (G = 10, Geduld 0,9, Regel A): der Verlader bekommt 10,0 % bei T = 200 (gerade) und 90,0 % bei
 T = 41 (ungerade), statt 52,6 % im stetigen Spiel; mit G = 100 und Regel A bei T = 200 sind es 50,0 %.
 
-**Kurze Runden** (Experiment 3; Verlader bietet zuerst; Abstand zum Grenzwert geteilt durch Δ gegen die Handentwicklung r₁r₂/(2(r₁ + r₂)); Raten (r₁; r₂) je Tag):
+**Kurze Runden** (Experiment 3; Verlader bietet zuerst; Abstand zum Grenzwert geteilt durch Δ gegen die Taylor-Entwicklung r₁r₂/(2(r₁ + r₂)); Raten (r₁; r₂) je Tag):
 
-| (r₁; r₂) | Δ | Verlader zuerst | Grenzwert | Abstand/Δ | Handentwicklung |
+| (r₁; r₂) | Δ | Verlader zuerst | Grenzwert | Abstand/Δ | Taylor-Entwicklung |
 |---|---|---|---|---|---|
 | 1,0; 1,0 | 0,1000 | 52,498 % | 50,000 % | 0,249792 | 0,250000 |
 | 1,0; 1,0 | 0,0100 | 50,250 % | 50,000 % | 0,249998 | 0,250000 |
@@ -161,10 +161,10 @@ Feste Kosten machen das Ergebnis „alles oder fast nichts“, der Diskont macht
 | 0,80 | 80,0 % | 72,0 % |
 | 0,95 | 95,0 % | 85,5 % |
 
-Zwei Lesarten von „Außenoption“ (Anteil des Halters bei Geduld 0,9999 beider Seiten): Nash-Lösung mit Drohpunkt o gegen das Ausstiegsprinzip (Variante A). Rückwärtsrechnen gegen Handformel bei T = 1 000 und 1 001: größte Abweichung 2,2·10⁻⁵
+Zwei Lesarten von „Außenoption“ (Anteil des Halters bei Geduld 0,9999 beider Seiten): Nash-Lösung mit Drohpunkt o gegen das Outside-Option-Prinzip (Variante A). Rückwärtsinduktion gegen Handformel bei T = 1 000 und 1 001: größte Abweichung 2,2·10⁻⁵
 (Geduld 0,99 ist dabei noch nicht ganz konvergiert).
 
-| Außenoption o | Nash mit Drohpunkt o | Ausstiegsprinzip |
+| Außenoption o | Nash mit Drohpunkt o | Outside-Option-Prinzip |
 |---|---|---|
 | 0,00 | 50,0 % | 50,0 % |
 | 0,20 | 60,0 % | 50,0 % |
@@ -284,12 +284,12 @@ Nash-Lösung und Maßstabsinvarianz kommen auch als Gewichtung von Zielen beim M
 | `vhd_evaluation.py` | Kennzahlen je Reiter, Messreihen-Erzeuger, Verdikte (reine Funktionen) |
 | `vhd_layout.py` | Fester Kopf (Stylesheet) |
 | `vhd_learning.py` | Lernende Verhandler: Spiele, Hedge, Regret Matching, Nash-Lücke |
-| `vhd_outside.py` | Außenoption: Rückwärtsrechnen, Schwellen, Handformeln |
+| `vhd_outside.py` | Außenoption: Rückwärtsinduktion, Schwellen, Handformeln |
 | `vhd_pdf_export.py` | PDF-Export (fpdf2) |
 | `vhd_presets.py` | Permalink (Begrenzen, Einrasten), Presets (Schnellstart, aktives Preset hervorgehoben), Zufalls-Seed-Button |
 | `vhd_raster.py` | Rasterspiel in Brüchen, stationäre Gleichgewichte, Schranke |
 | `vhd_rng.py` | wörtliche Kopie von `pearson-demo/prs_rng.py` (SplitMix64) |
-| `vhd_rubinstein.py` | Formel, Rückwärtsrechnen, feste Kosten, kurze Runden |
+| `vhd_rubinstein.py` | Formel, Rückwärtsinduktion, feste Kosten, kurze Runden |
 | `vhd_scenario.py` | Einstellungen (Settings) und Rollen |
 | `vhd_solutions.py` | Nash, Kalai–Smorodinsky, egalitär, utilitaristisch, Rubinstein bei gekrümmtem Nutzen |
 | `vhd_visualization.py` | Plotly-Abbildungen (Achsen gesperrt) |

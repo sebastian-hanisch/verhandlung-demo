@@ -24,7 +24,7 @@ def _half(fig):
 
 
 def build_rounds(a: ev.Analysis, height: int = 300):
-    """Der Wert des Anbieters der Runde t im Rückwärtsrechnen (Anteil am Überschuss): wer die Verhandlung in Runde t eröffnete, bekäme diesen Anteil."""
+    """Der Wert des Anbieters der Runde t in der Rückwärtsinduktion (Anteil am Überschuss): wer die Verhandlung in Runde t eröffnete, bekäme diesen Anteil."""
     s = a.settings
     rounds = list(range(1, len(a.values) + 1))
     proposer = [s.first if t % 2 == 1 else 3 - s.first for t in rounds]
@@ -51,7 +51,7 @@ def build_horizon(s: Settings, height: int = 340):
     """Anteil des Verladers für T = 1 … 60: ungerade Horizonte über, gerade unter dem Grenzwert."""
     curve = ev.horizon_curve(s)
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=curve["T"], y=curve["x1"], mode="lines+markers", name="Rückwärtsrechnen im Spiel mit T Runden", line=dict(color=C.COLOR_P1), marker=dict(size=6)))
+    fig.add_trace(go.Scatter(x=curve["T"], y=curve["x1"], mode="lines+markers", name="Rückwärtsinduktion im Spiel mit T Runden", line=dict(color=C.COLOR_P1), marker=dict(size=6)))
     fig.add_hline(y=curve["limit"], line=dict(color=C.COLOR_FORMULA, dash="dash", width=2), annotation_text="Formel (unendlicher Horizont)", annotation_position="top right")
     if s.t <= len(curve["T"]):
         fig.add_trace(go.Scatter(x=[s.t], y=[curve["x1"][s.t - 1]], mode="markers", name="gewähltes T", marker=dict(color=C.COLOR_DARK, size=12, symbol="diamond")))

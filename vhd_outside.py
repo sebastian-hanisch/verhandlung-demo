@@ -19,7 +19,7 @@ def exit_payoff(o, d_holder, variant: str):
 
 
 def outside_backward(d_first, d_second, o, T: int, variant: str = "A") -> list:
-    """Rückwärtsrechnen im Spiel mit T Runden (stetige Angebote, Annahme bei Gleichstand): Anteil des Anbieters der Runde t für t = 1 … T (Index 0 = Runde 1).
+    """Rückwärtsinduktion im Spiel mit T Runden (stetige Angebote, Annahme bei Gleichstand): Anteil des Anbieters der Runde t für t = 1 … T (Index 0 = Runde 1).
 
     Ungerade Runden: der erste Anbieter bietet, der Halter antwortet und lehnt nur ab, wenn max(Ausstieg, d₂ · Wert als Anbieter der nächsten Runde) mehr ist als das Angebot.
     Gerade Runden: der Halter bietet, der erste Anbieter antwortet (Variante B: der Halter kann stattdessen aussteigen und o nehmen)."""
@@ -65,5 +65,5 @@ def outside_hand(d_first, d_second, o, variant: str = "A"):
 
 
 def nash_with_threat_holder_share(o):
-    """Nash-Lösung mit dem Drohpunkt (0, o), Nutzen linear: der Halter bekommt o + (1 − o)/2 = (1 + o)/2. Eine ANDERE Lesart von „Außenoption“ als das Ausstiegsprinzip (A)."""
+    """Nash-Lösung mit dem Drohpunkt (0, o), Nutzen linear: der Halter bekommt o + (1 − o)/2 = (1 + o)/2. Eine ANDERE Lesart von „Außenoption“ als das Outside-Option-Prinzip (A)."""
     return (1 + o) / 2

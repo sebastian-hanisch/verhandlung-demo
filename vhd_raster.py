@@ -1,4 +1,4 @@
-"""Rubinstein-Verhandlung mit Angeboten auf einem Raster {0, 1/G, …, 1}: Rückwärtsrechnen in Brüchen und stationäre Gleichgewichte.
+"""Rubinstein-Verhandlung mit Angeboten auf einem Raster {0, 1/G, …, 1}: Rückwärtsinduktion in Brüchen und stationäre Gleichgewichte.
 
 Alles ganzzahlig bzw. in fractions.Fraction, nie in Gleitkomma: ob ein Angebot genau dem Fortsetzungswert des Antwortenden entspricht (Gleichstand), muss exakt
 entschieden werden. Es gibt drei Ebenen des Gleichstands: (1) der Antwortende bei gleicher Auszahlung (Regel A: annehmen, Regel R: ablehnen), (2) der Anbieter, wenn
@@ -22,7 +22,7 @@ def smallest_acceptable(cont: Fraction, G: int, rule_a: bool) -> int:
 
 
 def grid_backward(d_first, d_second, T: int, G: int, rule_a: bool = True) -> list:
-    """Rückwärtsrechnen im Spiel mit T Runden und Angeboten k/G. Liste von (a_t, b_t) für t = 1 … T: Wert des Anbieters und des Antwortenden der Runde t, in Termen der Runde t.
+    """Rückwärtsinduktion im Spiel mit T Runden und Angeboten k/G. Liste von (a_t, b_t) für t = 1 … T: Wert des Anbieters und des Antwortenden der Runde t, in Termen der Runde t.
 
     Die Diskontfaktoren sind Brüche. Der Anbieter wählt das beste Rasterangebot: das kleinste annehmbare (Auszahlung 1 − k/G) oder, wenn das schlechter ist als die Ablehnung
     (d_Anbieter · Wert als Antwortender der nächsten Runde), ein abgelehntes Angebot. Bei gleicher Auszahlung zieht er das angenommene Angebot vor (Regel P)."""

@@ -129,7 +129,7 @@ def error_curves(pairs=C.E1_PAIRS, t_max: int = 400) -> dict:
 
 
 def settle_row(d1: float, d2: float, tol: float = C.E1_TOL, t_max: int = C.E1_TMAX) -> dict:
-    """Konvergenz des Rückwärtsrechnens gegen die Formel: kleinstes T, ab dem der Fehler für alle größeren T bis t_max unter tol bleibt; die Vorhersage aus (d₁d₂)^(T/2) < tol;
+    """Konvergenz der Rückwärtsinduktion gegen die Formel: kleinstes T, ab dem der Fehler für alle größeren T bis t_max unter tol bleibt; die Vorhersage aus (d₁d₂)^(T/2) < tol;
     dazu Anteile und Fehler bei T = 10, 11, 200 (Gleitkomma) und 500 (exakt in Brüchen)."""
     shares = R.share_at_horizons(d1, d2, t_max)
     limit = R.rubinstein_share(d1, d2)
@@ -146,7 +146,7 @@ def settle_row(d1: float, d2: float, tol: float = C.E1_TOL, t_max: int = C.E1_TM
 
 def short_rounds_rows(r1: float, r2: float, dts=C.E3_DTS) -> list:
     """Anteil des Verladers (Rate r₁) für Rundenlängen dt, wenn er zuerst bietet bzw. der Spediteur (Rate r₂) zuerst bietet; Grenzwert r₂/(r₁ + r₂); Vorteil des Zuerstbietens;
-    Abstand zum Grenzwert geteilt durch dt gegen die Handentwicklung r₁ r₂/(2 (r₁ + r₂))."""
+    Abstand zum Grenzwert geteilt durch dt gegen die Taylor-Entwicklung r₁ r₂/(2 (r₁ + r₂))."""
     limit = R.limit_share_short_rounds(r1, r2)
     rows = []
     for dt in dts:
@@ -163,7 +163,7 @@ def short_rounds_row(s: Settings) -> dict:
 # --- Reiter 4: Feste Kosten --------------------------------------------------------------------------------------------------------------------------
 
 def costs_curve(s: Settings, n: int = 40) -> dict:
-    """Anteil des Verladers für T = 1 … n bei festen Kosten und, wenn beide Kosten unter 1 liegen, bei Diskont d = 1 − c (gleiche Verlustrate in Runde 1)."""
+    """Anteil des Verladers für T = 1 … n bei festen Kosten und, wenn beide Kosten unter 1 liegen, bei Diskont d = 1 − c (gleiche Diskontrate in Runde 1)."""
     c_first, c_second = ordered_costs(s)
     cost_values = [to_player1(s.first, R.costs_backward(c_first, c_second, T)[0]) for T in range(1, n + 1)]
     comparable = c_first < 1 and c_second < 1
@@ -175,7 +175,7 @@ def costs_curve(s: Settings, n: int = 40) -> dict:
 
 
 def costs_case_row(c_first: float, c_second: float) -> dict:
-    """Ein Fall der Messreihe: Handformel gegen das Rückwärtsrechnen bei T = 1000 und 1001, Diskont mit d = 1 − c daneben (nur für Kosten unter 1)."""
+    """Ein Fall der Messreihe: Handformel gegen die Rückwärtsinduktion bei T = 1000 und 1001, Diskont mit d = 1 − c daneben (nur für Kosten unter 1)."""
     pred = R.costs_prediction(c_first, c_second)
     r0 = R.costs_backward(c_first, c_second, 1000)
     r1 = R.costs_backward(c_first, c_second, 1001)
@@ -227,7 +227,7 @@ def outside_scan(pairs=C.E5_PAIRS, os_=C.E5_OS, ts=C.E5_TS) -> dict:
 
 
 def outside_check(pairs=C.E5_PAIRS, os_=C.E5_OS) -> dict:
-    """Größte Abweichung des Rückwärtsrechnens (T = 1000 und 1001) von der Handformel je Variante."""
+    """Größte Abweichung der Rückwärtsinduktion (T = 1000 und 1001) von der Handformel je Variante."""
     out = {}
     for variant in ("A", "B", "C"):
         worst = 0.0
@@ -240,7 +240,7 @@ def outside_check(pairs=C.E5_PAIRS, os_=C.E5_OS) -> dict:
 
 
 def nash_vs_exit_rows(d: float = 0.9999, os_=(0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 0.95)) -> list:
-    """Anteil des Halters nach Nash mit Drohpunkt o gegen das Ausstiegsprinzip (Variante A) bei sehr großer Geduld beider Seiten."""
+    """Anteil des Halters nach Nash mit Drohpunkt o gegen das Outside-Option-Prinzip (Variante A) bei sehr großer Geduld beider Seiten."""
     return [{"o": o, "nash": O.nash_with_threat_holder_share(o), "exit": 1 - O.outside_hand(d, d, o, "A")} for o in os_]
 
 
@@ -438,7 +438,7 @@ def verdict_horizon(s: Settings) -> tuple:
 
 def verdict_short_rounds(s: Settings) -> tuple:
     row = short_rounds_row(s)
-    return "info", (f"Runden von {_dt_label(s.dt)} (Verlustraten r₁ = {de(s.r1, 1)}, r₂ = {de(s.r2, 1)} je Tag): bietet der Verlader zuerst, bekommt er {pct(row['x_first'], 2)}, bietet der Spediteur zuerst, "
+    return "info", (f"Runden von {_dt_label(s.dt)} (Diskontraten r₁ = {de(s.r1, 1)}, r₂ = {de(s.r2, 1)} je Tag): bietet der Verlader zuerst, bekommt er {pct(row['x_first'], 2)}, bietet der Spediteur zuerst, "
                     f"{pct(row['x_second'], 2)}; Vorteil des Zuerstbietens {pp(row['edge'], 2)}. Grenzwert für Runden gegen null: r₂/(r₁ + r₂) = {pct(row['limit'], 2)} (Nash-Lösung mit den Gewichten 1/r₁ "
                     f"und 1/r₂), Halbe-halbe 50,0 %.")
 
@@ -451,7 +451,7 @@ def verdict_costs(s: Settings) -> tuple:
     discount_text = ""
     if c_first < 1 and c_second < 1:
         d_first, d_second = R.discount_from_costs(c_first), R.discount_from_costs(c_second)
-        discount_text = f" Mit Diskont d = 1 − c (gleiche Verlustrate in Runde 1) bekäme der erste Anbieter {pct(R.backward_T(d_first, d_second, s.t)[0])}."
+        discount_text = f" Mit Diskont d = 1 − c (gleiche Diskontrate in Runde 1) bekäme der erste Anbieter {pct(R.backward_T(d_first, d_second, s.t)[0])}."
     pred = R.costs_prediction(c_first, c_second)
     head = f"Feste Kosten je Runde (Verlader {de(s.c1, 2)}, Spediteur {de(s.c2, 2)}), {first} bietet zuerst, T = {s.t}: der erste Anbieter bekommt {pct(first_share)}, der Verlader {pct(x1)}."
     if pred is None:
@@ -550,7 +550,7 @@ def verdict_e3(rows_by_rates: dict) -> tuple:
         parts.append(f"({de(r1, 1)}; {de(r2, 1)}): {de(last['rate'], 6)} gegen {de(last['rate_hand'], 6)}")
     first = next(iter(rows_by_rates.values()))
     at01, at0001 = find(first, dt=0.1), find(first, dt=0.001)
-    return "info", (f"Abstand zum Grenzwert geteilt durch die Rundenlänge bei Δ = {de(first[-1]['dt'], 4)}, je Raten (r₁; r₂), gemessen gegen die Handentwicklung r₁r₂/(2(r₁ + r₂)): " + "; ".join(parts) +
+    return "info", (f"Abstand zum Grenzwert geteilt durch die Rundenlänge bei Δ = {de(first[-1]['dt'], 4)}, je Raten (r₁; r₂), gemessen gegen die Taylor-Entwicklung r₁r₂/(2(r₁ + r₂)): " + "; ".join(parts) +
                     f". Bei gleichen Raten (1; 1) sinkt der Vorteil des Zuerstbietens von {de(at01['edge'], 4)} bei Δ = {de(at01['dt'], 1)} auf {de(at0001['edge'], 6)} bei Δ = {de(at0001['dt'], 3)}.")
 
 
@@ -561,15 +561,15 @@ def verdict_e4(rows: list) -> tuple:
     tail = ""
     if equal is not None:
         tail = (f" Bei gleichen Kosten ({de(equal['c_first'], 2)}) gibt T = 1000 dem ersten Anbieter {pct(equal['t1000_first'])} und T = 1001 {pct(equal['t1001_first'])}: kein eindeutiges Ergebnis.")
-    return "info", (f"In {agree} von {len(unequal)} Fällen mit ungleichen Kosten stimmt das Rückwärtsrechnen bei T = 1000 und 1001 mit der Handformel überein (wer weniger Kosten hat und zuerst bietet, bekommt "
+    return "info", (f"In {agree} von {len(unequal)} Fällen mit ungleichen Kosten stimmt die Rückwärtsinduktion bei T = 1000 und 1001 mit der Handformel überein (wer weniger Kosten hat und zuerst bietet, bekommt "
                     f"genau 100 %; hat der erste die größeren, bekommt er die Kosten des anderen).{tail} Mit Diskont d = 1 − c stünde im Fall (0,05; 0,10) {pct(find(rows, c_first=0.05, c_second=0.1)['discount'])} statt 100 %.")
 
 
 def verdict_e5(scan: dict, check: dict, rows: list) -> tuple:
     r02 = next(r for r in rows if abs(r["o"] - 0.2) < 1e-9)
     return "info", (f"Variante B (der Halter kann auch in seiner eigenen Anbieterrunde aussteigen) weicht in {scan['diff']} von {scan['cells']} Zellen (4 Paare, 10 Werte o, T = 1 bis 60) von Variante A ab: "
-                    f"deshalb wird sie nicht als Regler angeboten. Rückwärtsrechnen gegen Handformel bei T = 1000 und 1001: größte Abweichung {sci(max(check.values()))}. Nash-Lösung mit Drohpunkt o = 0,2 gegen "
-                    f"Ausstiegsprinzip bei δ = 0,9999: {pct(r02['nash'], 1)} gegen {pct(r02['exit'], 1)} für den Halter.")
+                    f"deshalb wird sie nicht als Regler angeboten. Rückwärtsinduktion gegen Handformel bei T = 1000 und 1001: größte Abweichung {sci(max(check.values()))}. Nash-Lösung mit Drohpunkt o = 0,2 gegen "
+                    f"Outside-Option-Prinzip bei δ = 0,9999: {pct(r02['nash'], 1)} gegen {pct(r02['exit'], 1)} für den Halter.")
 
 
 def verdict_e6(rows: list) -> tuple:

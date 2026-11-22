@@ -1,7 +1,7 @@
 """Verhandlung: wer Zeit hat, bekommt mehr - interaktive Konzept-Demo
 Sebastian Hanisch - Operations Research und Machine Learning
 
-Zwei Betriebe (Verlader und Spediteur) teilen den Überschuss einer Tour und machen sich abwechselnd Angebote. Die Demo rechnet das Rubinstein-Gleichgewicht (Formel gegen Rückwärtsrechnen),
+Zwei Betriebe (Verlader und Spediteur) teilen den Überschuss einer Tour und machen sich abwechselnd Angebote. Die Demo rechnet das Rubinstein-Gleichgewicht (Formel gegen Rückwärtsinduktion),
 den Einfluss von Geduld, Horizont, Rundenlänge, festen Kosten, Außenoption und Angebotsraster, vergleicht Lösungskonzepte (mit Maßstabsprobe) und lässt Lernregeln gegeneinander spielen.
 
 Lauffähig mit: streamlit run app.py
@@ -105,10 +105,10 @@ Alle Kennzahlen sind **Anteile am Überschuss der Tour** (Bezugsmenge: der ganze
 | **Abwechselnde Angebote, Horizont T** | In Runde 1 bietet der erste Anbieter, in Runde 2 der zweite usw.; wer antwortet, nimmt an oder lehnt ab. Nach T Runden ist Schluss (T = 1: **Ultimatum**). Im Gleichgewicht einigen sich beide sofort in Runde 1; die späteren Runden bestimmen den Preis dafür. |
 | **Geduld δ, Diskontfaktor** | Eine Einigung in Runde t zählt mit δ^(t−1): je kleiner δ, desto mehr kostet das Warten. **Feste Kosten** c ziehen stattdessen c je Runde ab. |
 | **Rubinstein-Gleichgewicht** | Das teilspielperfekte Gleichgewicht bei unendlichem Horizont: der erste Anbieter bekommt (1 − δ₂)/(1 − δ₁δ₂). Mehr Geduld des ersten Anbieters vergrößert seinen Anteil, mehr Geduld des anderen verkleinert ihn. |
-| **Rückwärtsrechnen** | Die letzte Runde zuerst: dort bekommt der Anbieter alles; davor muss er dem Antwortenden so viel bieten, wie dieser als Anbieter der nächsten Runde (nach Abzug der Wartekosten) bekäme. |
+| **Rückwärtsinduktion** | Die letzte Runde zuerst: dort bekommt der Anbieter alles; davor muss er dem Antwortenden so viel bieten, wie dieser als Anbieter der nächsten Runde (nach Abzug der Wartekosten) bekäme. |
 | **Raster G, Gleichstand** | Angebote nur in Schritten von 1/G. Bei genau gleichem Wert nimmt der Antwortende an (Regel A) oder lehnt ab (Regel R); dazu zieht der Anbieter bei gleicher Auszahlung das angenommene Angebot vor. |
 | **Außenoption o** | Der Antwortende der ersten Runde kann aussteigen und bekommt o. Sie zählt erst, wenn o über seinem Rubinstein-Anteil liegt (Variante A); dann bekommt er genau o. |
-| **Nash-Lösung** | Die Aufteilung, die das Produkt der Nutzengewinne gegenüber dem Drohpunkt maximiert. Für Runden, die gegen null gehen, ist sie (ohne Drohpunkt, mit den Gewichten 1/Verlustrate) der Grenzwert des Rubinstein-Gleichgewichts. |
+| **Nash-Lösung** | Die Aufteilung, die das Produkt der Nutzengewinne gegenüber dem Drohpunkt maximiert. Für Runden, die gegen null gehen, ist sie (ohne Drohpunkt, mit den Gewichten 1/Diskontrate) der Grenzwert des Rubinstein-Gleichgewichts. |
 | **Kalai–Smorodinsky** | Die Aufteilung, in der beide denselben Anteil ihres Idealgewinns bekommen (Idealgewinn: das Beste, was ihnen die Einigungen erlauben). |
 | **Egalitär, utilitaristisch** | Egalitär: gleiche Gewinne. Utilitaristisch: größte Summe der Nutzen. Beide hängen am **Maßstab**, in dem man den Nutzen misst; Nash und Kalai–Smorodinsky nicht (Experiment 6). |
 | **Halbe-halbe (Shapley-Wert)** | Bei zwei Spielern teilt der Shapley-Wert den Überschuss in der Mitte, ohne Ablauf, Geduld oder Nutzenform. |
@@ -135,8 +135,8 @@ with st.sidebar:
     st.slider("Kosten je Runde, Verlader c₁", *bounds("c1_slider"), step=0.01, key="c1_slider", format="%.2f", help="Jede Runde Warten kostet den Verlader c₁ vom Überschuss. Wirkt im Reiter Feste Kosten.")
     st.slider("Kosten je Runde, Spediteur c₂", *bounds("c2_slider"), step=0.01, key="c2_slider", format="%.2f", help="Kosten je Runde des Spediteurs. Wirkt im Reiter Feste Kosten.")
     st.header("⏱️ Kurze Runden")
-    st.slider("Verlustrate des Verladers r₁ (je Tag)", *bounds("r1_slider"), step=0.1, key="r1_slider", format="%.1f", help="Geduld als Rate: δ = exp(−r·Δ) bei Rundenlänge Δ in Tagen. Wirkt im Reiter Kurze Runden.")
-    st.slider("Verlustrate des Spediteurs r₂ (je Tag)", *bounds("r2_slider"), step=0.1, key="r2_slider", format="%.1f", help="Verlustrate des Spediteurs. Wirkt im Reiter Kurze Runden.")
+    st.slider("Diskontrate des Verladers r₁ (je Tag)", *bounds("r1_slider"), step=0.1, key="r1_slider", format="%.1f", help="Geduld als Rate: δ = exp(−r·Δ) bei Rundenlänge Δ in Tagen. Wirkt im Reiter Kurze Runden.")
+    st.slider("Diskontrate des Spediteurs r₂ (je Tag)", *bounds("r2_slider"), step=0.1, key="r2_slider", format="%.1f", help="Diskontrate des Spediteurs. Wirkt im Reiter Kurze Runden.")
     st.select_slider("Rundenlänge Δ", options=C.DT_OPTIONS, format_func=lambda v: C.DT_LABELS[v], key="dt_select", help="Wie lange eine Runde dauert. Wirkt im Reiter Kurze Runden.")
     st.header("🚪 Außenoption")
     st.slider("Wert der Außenoption o", *bounds("o_slider"), step=0.01, key="o_slider", format="%.2f", help="Was der Antwortende der ersten Runde bekäme, wenn er aussteigt (Anteil am Überschuss). Wirkt im Reiter Außenoption.")
@@ -169,7 +169,7 @@ m3.metric("Formel für den Verlader", pct(a.limit_x1), delta=f"Abstand bei T = {
 grid_state = ev.grid_state(settings)
 m4.metric("Raster (Verlader)", pct(ev.to_player1(settings.first, grid_state["share_first"])), delta=f"G = {settings.g}, Regel {settings.rule}", delta_color="off", help="Anteil des Verladers im Rasterspiel mit Angeboten in Schritten von 1/G.")
 st.plotly_chart(build_rounds(a), width="stretch", key="main_rounds")
-st.caption(f"Rückwärtsrechnen: der Balken der Runde t ist der Anteil, den der Anbieter dieser Runde bekäme, wenn die Verhandlung dort begänne (bis Runde {len(a.values)}). Runde 1 ist das Ergebnis; "
+st.caption(f"Rückwärtsinduktion: der Balken der Runde t ist der Anteil, den der Anbieter dieser Runde bekäme, wenn die Verhandlung dort begänne (bis Runde {len(a.values)}). Runde 1 ist das Ergebnis; "
            "die Balken wechseln, weil jeder dem Antwortenden das gibt, was dieser als nächster Anbieter nach Abzug der Wartekosten bekäme.")
 if st.button("📄 PDF erstellen", key="pdf_make"):
     st.session_state["pdf_bytes"] = (settings, build_pdf(a))
@@ -211,7 +211,7 @@ with tabs[1]:
     st.plotly_chart(build_horizon(settings), width="stretch", key="horizon_chart")
     kind, text = ev.verdict_horizon(settings)
     getattr(st, kind)(text)
-    st.subheader("🔬 Experiment 1: Die Formel gegen das Rückwärtsrechnen")
+    st.subheader("🔬 Experiment 1: Die Formel gegen die Rückwärtsinduktion")
     if grid is not None:
         st.caption("Fehler |Anteil bei Horizont T − Formel| für vier Paare (δ₁; δ₂), exakt gerechnet bis T = 400; in der Tabelle die Messreihe bis T = 2 000 (Gleitkomma) und T = 500 in Brüchen.")
         st.plotly_chart(build_convergence(_convergence_curves()), width="stretch", key="e1_chart")
@@ -223,7 +223,7 @@ with tabs[1]:
 # --- Reiter 3: Kurze Runden ---------------------------------------------------------------------------------------------------------------
 
 with tabs[2]:
-    st.caption("Wirkt: Verlustraten r₁, r₂ und Rundenlänge Δ (Marke in der Tabelle); beide Reihenfolgen werden gezeigt.")
+    st.caption("Wirkt: Diskontraten r₁, r₂ und Rundenlänge Δ (Marke in der Tabelle); beide Reihenfolgen werden gezeigt.")
     rows = _short_rows(settings.r1, settings.r2)
     st.plotly_chart(build_short_rounds(rows, settings), width="stretch", key="short_chart")
     kind, text = ev.verdict_short_rounds(settings)
@@ -232,13 +232,13 @@ with tabs[2]:
                  hide_index=True, width="stretch")
     st.subheader("🔬 Experiment 3: Runden gegen null, der Grenzwert ist die Nash-Lösung")
     if grid is not None:
-        st.caption("Fünf Paare von Verlustraten; Abstand zum Grenzwert geteilt durch die Rundenlänge gegen die Handentwicklung r₁r₂/(2(r₁ + r₂)).")
+        st.caption("Fünf Paare von Diskontraten; Abstand zum Grenzwert geteilt durch die Rundenlänge gegen die Taylor-Entwicklung r₁r₂/(2(r₁ + r₂)).")
         table = []
         for key, rs in grid["rounds"].items():
             r1, r2 = (float(x) for x in key.split("|"))
             for r in rs:
                 if r["dt"] in (0.1, 0.01, 0.001, 0.0001):
-                    table.append({"(r₁; r₂)": f"({de(r1, 1)}; {de(r2, 1)})", "Δ": de(r["dt"], 4), "Verlader zuerst": pct(r["x_first"], 3), "Grenzwert": pct(r["limit"], 3), "Abstand/Δ": de(r["rate"], 6), "Handentwicklung": de(r["rate_hand"], 6)})
+                    table.append({"(r₁; r₂)": f"({de(r1, 1)}; {de(r2, 1)})", "Δ": de(r["dt"], 4), "Verlader zuerst": pct(r["x_first"], 3), "Grenzwert": pct(r["limit"], 3), "Abstand/Δ": de(r["rate"], 6), "Taylor-Entwicklung": de(r["rate_hand"], 6)})
         st.dataframe(table, hide_index=True, width="stretch")
         kind, text = ev.verdict_e3(grid["rounds"])
         getattr(st, kind)(text)
@@ -252,7 +252,7 @@ with tabs[3]:
     getattr(st, kind)(text)
     st.subheader("🔬 Experiment 4: Feste Kosten machen das Ergebnis „alles oder fast nichts“")
     if grid is not None:
-        st.caption("Neun Fälle (Kosten des ersten, des zweiten Anbieters): Handformel gegen Rückwärtsrechnen bei T = 1 000 und 1 001, daneben der Diskont d = 1 − c (nur bei Kosten unter 1).")
+        st.caption("Neun Fälle (Kosten des ersten, des zweiten Anbieters): Handformel gegen Rückwärtsinduktion bei T = 1 000 und 1 001, daneben der Diskont d = 1 − c (nur bei Kosten unter 1).")
         st.dataframe([{"Kosten (erster; zweiter)": f"({de(r['c_first'], 2)}; {de(r['c_second'], 2)})", "Handformel (erster)": "nicht eindeutig" if r["pred_first"] is None else pct(r["pred_first"]),
                        "T = 1 000": pct(r["t1000_first"]), "T = 1 001": pct(r["t1001_first"]), "Diskont d = 1 − c": "–" if r["discount"] is None else pct(r["discount"])} for r in grid["costs"]], hide_index=True, width="stretch")
         kind, text = ev.verdict_e4(grid["costs"])
@@ -267,8 +267,8 @@ with tabs[4]:
     getattr(st, kind)(text)
     st.subheader("🔬 Experiment 5: Die Option zählt erst über der Schwelle")
     if grid is not None:
-        st.caption("Zwei Lesarten von „Außenoption“ (Halter, Geduld 0,9999 beider Seiten): Nash-Lösung mit Drohpunkt o gegen Ausstiegsprinzip (Variante A).")
-        st.dataframe([{"Außenoption o": de(r["o"], 2), "Nash mit Drohpunkt o": pct(r["nash"], 1), "Ausstiegsprinzip": pct(r["exit"], 1)} for r in grid["nash_vs_exit"]], hide_index=True, width="stretch")
+        st.caption("Zwei Lesarten von „Außenoption“ (Halter, Geduld 0,9999 beider Seiten): Nash-Lösung mit Drohpunkt o gegen Outside-Option-Prinzip (Variante A).")
+        st.dataframe([{"Außenoption o": de(r["o"], 2), "Nash mit Drohpunkt o": pct(r["nash"], 1), "Outside-Option-Prinzip": pct(r["exit"], 1)} for r in grid["nash_vs_exit"]], hide_index=True, width="stretch")
         kind, text = ev.verdict_e5(grid["outside_scan"], grid["outside_check"], grid["nash_vs_exit"])
         getattr(st, kind)(text)
 
@@ -370,7 +370,7 @@ with st.expander("📐 Mathematische Formulierung"):
 | Symbol | Bedeutung |
 |---|---|
 | $\delta_1,\ \delta_2$ | Diskontfaktoren (Geduld) des ersten und des zweiten Anbieters |
-| $T$, $v_t$ | Horizont; Wert des Anbieters der Runde $t$ im Rückwärtsrechnen |
+| $T$, $v_t$ | Horizont; Wert des Anbieters der Runde $t$ bei der Rückwärtsinduktion |
 | $c_i$ | feste Kosten je Runde |
 | $o$, $x_2^*$ | Außenoption; Rubinstein-Anteil des Antwortenden ohne Option |
 | $G$ | Raster der Angebote (Schritte $1/G$) |
@@ -388,7 +388,7 @@ $\delta_i^{\,t-1}$ (Geduld $\delta_i$) bzw. mit $-c_i (t-1)$ (feste Kosten).
 | Symbol | Bedeutung |
 |---|---|
 | $\delta_1, \delta_2$ | Diskontfaktoren (Geduld) des ersten und des zweiten Anbieters |
-| $T$, $v_t$ | Horizont; Wert des Anbieters der Runde $t$ im Rückwärtsrechnen |
+| $T$, $v_t$ | Horizont; Wert des Anbieters der Runde $t$ in der Rückwärtsinduktion |
 | $c_i$ | feste Kosten je Runde |
 | $o$, $x_2^*$ | Außenoption; Rubinstein-Anteil des Antwortenden ohne Option |
 | $G$ | Raster der Angebote (Schritte $1/G$) |
@@ -398,7 +398,7 @@ $\delta_i^{\,t-1}$ (Geduld $\delta_i$) bzw. mit $-c_i (t-1)$ (feste Kosten).
 
 $$ x_1 = \frac{1-\delta_2}{1-\delta_1\delta_2}, \qquad x_2 = \frac{\delta_2\,(1-\delta_1)}{1-\delta_1\delta_2} $$
 
-**Rückwärtsrechnen** im Spiel mit $T$ Runden ($r(t)$ ist der Antwortende der Runde $t$):
+**Rückwärtsinduktion** im Spiel mit $T$ Runden ($r(t)$ ist der Antwortende der Runde $t$):
 
 $$ v_T = 1, \qquad v_t = 1 - \delta_{r(t)}\, v_{t+1} $$
 
@@ -406,7 +406,7 @@ $$ v_T = 1, \qquad v_t = 1 - \delta_{r(t)}\, v_{t+1} $$
 
 $$ v_1(T) - x_1 = \begin{cases} -\dfrac{1-\delta_2}{1-q}\, q^{m} & T = 2m \\[2mm] +\dfrac{\delta_2\,(1-\delta_1)}{1-q}\, q^{m} & T = 2m+1 \end{cases} $$
 
-**Kurze Runden** ($\delta_i = e^{-r_i \Delta}$) mit Grenzwert und Handentwicklung:
+**Kurze Runden** ($\delta_i = e^{-r_i \Delta}$) mit Grenzwert und Taylor-Entwicklung:
 
 $$ x_1 = \frac{r_2}{r_1 + r_2}\Big(1 + \frac{r_1\,\Delta}{2} + O(\Delta^2)\Big) \;\longrightarrow\; \frac{r_2}{r_1+r_2} \quad (\Delta \to 0) $$
 
